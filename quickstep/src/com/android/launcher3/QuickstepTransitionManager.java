@@ -911,13 +911,8 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
         // Since we added a start delay, call update here to init the FloatingIconView properly.
         listener.onUpdate(0, true /* initOnly */);
 
-        // If app targets are translucent, do not animate the background as it causes a visible
-        // flicker when it resets itself at the end of its animation.
-        if (appTargetsAreTranslucent || !launcherClosing) {
-            animatorSet.play(appAnimator);
-        } else {
-            animatorSet.playTogether(appAnimator, getBackgroundAnimator());
-        }
+        animatorSet.playTogether(appAnimator, getBackgroundAnimator());
+
         return animatorSet;
     }
 
@@ -1051,13 +1046,8 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
             }
         });
 
-        // If app targets are translucent, do not animate the background as it causes a visible
-        // flicker when it resets itself at the end of its animation.
-        if (appTargetsAreTranslucent || !launcherClosing) {
-            animatorSet.play(appAnimator);
-        } else {
-            animatorSet.playTogether(appAnimator, getBackgroundAnimator());
-        }
+        animatorSet.play(appAnimator);
+
         return animatorSet;
     }
 

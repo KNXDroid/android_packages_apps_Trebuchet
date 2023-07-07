@@ -1050,12 +1050,12 @@ public abstract class AbsSwipeUpHandler<T extends RecentsViewContainer,
                     }
                     mHandled = true;
 
-                    InteractionJankMonitorWrapper.begin(mRecentsView, Cuj.CUJ_LAUNCHER_QUICK_SWITCH,
-                            2000 /* ms timeout */);
-                    InteractionJankMonitorWrapper.begin(mRecentsView,
-                            Cuj.CUJ_LAUNCHER_APP_CLOSE_TO_HOME);
-                    InteractionJankMonitorWrapper.begin(mRecentsView,
-                            Cuj.CUJ_LAUNCHER_APP_SWIPE_TO_RECENTS);
+                    //InteractionJankMonitorWrapper.begin(mRecentsView, Cuj.CUJ_LAUNCHER_QUICK_SWITCH,
+                    //        2000 /* ms timeout */);
+                    //InteractionJankMonitorWrapper.begin(mRecentsView,
+                    //        Cuj.CUJ_LAUNCHER_APP_CLOSE_TO_HOME);
+                    //InteractionJankMonitorWrapper.begin(mRecentsView,
+                    //        Cuj.CUJ_LAUNCHER_APP_SWIPE_TO_RECENTS);
 
                     rv.post(() -> rv.getViewTreeObserver().removeOnDrawListener(this));
                 }

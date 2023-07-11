@@ -225,4 +225,5 @@
          of the same name in SystemUI. -->
     <string-array name="config_appsSupportMultiInstancesSplit">
     </string-array>
+    <integer name="max_depth_blur_radius">75</integer>
 </resources>

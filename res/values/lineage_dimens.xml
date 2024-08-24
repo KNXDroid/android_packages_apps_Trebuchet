@@ -20,3 +20,13 @@
     <dimen name="meminfo_bottom_margin_gesture">15dp</dimen>
     <dimen name="meminfo_bottom_margin_three_button">15dp</dimen>
 </resources>
+
+<permissions>
+    <!-- Additional permissions on top of privapp_whitelist_com.android.launcher3.xml -->
+    <privapp-permissions package="com.android.launcher3">
+        <permission name="android.permission.SUSPEND_APPS"/>
+        <permission name="android.permission.INTERACT_ACROSS_USERS"/>
+        <permission name="android.permission.FORCE_STOP_PACKAGES"/>
+        <permission name="com.libremobileos.permission.START_FREEFORM"/>
+    </privapp-permissions>
+</permissions>

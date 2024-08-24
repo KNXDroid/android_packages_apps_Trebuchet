@@ -300,7 +300,7 @@ public interface TaskShortcutFactory {
 
         public FloatingSystemShortcut(RecentsViewContainer container, TaskContainer taskContainer) {
             // TODO new icon?
-            super(R.drawable.float_portrait_2_24px, R.string.floating_window,
+            super(R.drawable.ic_caption_desktop_button_foreground, R.string.recent_task_option_freeform,
                     container, taskContainer.getItemInfo(), taskContainer.getTaskView());
             mTaskView = taskContainer.getTaskView();
         }

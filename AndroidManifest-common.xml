@@ -51,6 +51,9 @@
     <!-- Floating window -->
     <uses-permission android:name="com.yaap.permission.START_FREEFORM" />
 
+    <!-- LMOFreeform -->
+    <uses-permission android:name="com.libremobileos.permission.START_FREEFORM" />
+
     <!--
     Permissions required for read/write access to the workspace data. These permission name
     should not conflict with that defined in other apps, as such an app should embed its package

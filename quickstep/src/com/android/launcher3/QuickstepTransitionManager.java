@@ -236,7 +236,7 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
     private final float mClosingWindowTransY;
     private final float mMaxShadowRadius;
 
-    private final StartingWindowListener mStartingWindowListener =
+    private StartingWindowListener mStartingWindowListener =
             new StartingWindowListener(this);
     private ContentObserver mAnimationRemovalObserver = new ContentObserver(
             ORDERED_BG_EXECUTOR.getHandler()) {
@@ -1191,6 +1191,9 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
         SystemUiProxy.INSTANCE.get(mLauncher).setStartingWindowListener(null);
         ORDERED_BG_EXECUTOR.execute(() -> mLauncher.getContentResolver()
                 .unregisterContentObserver(mAnimationRemovalObserver));
+        if (mStartingWindowListener != null) {
+            mStartingWindowListener = null;
+        }
     }
 
     private void unregisterRemoteAnimations() {

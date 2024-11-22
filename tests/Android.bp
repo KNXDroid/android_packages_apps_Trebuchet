@@ -178,6 +178,7 @@ filegroup {
         "multivalentTests/src/**/*Test.java",
         "multivalentTests/src/**/*Test.kt",
     ],
+<<<<<<< HEAD
 }
 
 filegroup {
@@ -238,3 +239,6 @@ android_robolectric_test {
     upstream: true,
     strict_mode: false,
 }
+=======
+}
+>>>>>>> 205d494157 (Launcher3: Remove launcher roboelectric test)

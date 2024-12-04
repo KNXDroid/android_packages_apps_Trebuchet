@@ -166,6 +166,8 @@ import com.android.systemui.shared.system.BlurUtils;
 import com.android.systemui.shared.system.InteractionJankMonitorWrapper;
 import com.android.systemui.shared.system.QuickStepContract;
 import com.android.wm.shell.startingsurface.IStartingWindowListener;
+import android.view.animation.DecelerateInterpolator;
+
 
 import java.io.PrintWriter;
 import java.lang.ref.WeakReference;
@@ -183,35 +185,35 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
             SystemProperties.getBoolean("persist.debug.shell_starting_surface", true);
 
     /** Duration of status bar animations. */
-    public static final int STATUS_BAR_TRANSITION_DURATION = 120;
+    public static final int STATUS_BAR_TRANSITION_DURATION = 180;
 
     /**
      * Since our animations decelerate heavily when finishing, we want to start status bar
      * animations x ms before the ending.
      */
-    public static final int STATUS_BAR_TRANSITION_PRE_DELAY = 96;
+    public static final int STATUS_BAR_TRANSITION_PRE_DELAY = 86;
 
-    public static final long APP_LAUNCH_DURATION = 500;
+    public static final long APP_LAUNCH_DURATION = 440;
 
-    private static final long APP_LAUNCH_ALPHA_DURATION = 50;
-    private static final long APP_LAUNCH_ALPHA_START_DELAY = 25;
+    private static final long APP_LAUNCH_ALPHA_DURATION = 70;
+    private static final long APP_LAUNCH_ALPHA_START_DELAY = 15;
 
     public static final int ANIMATION_NAV_FADE_IN_DURATION = 266;
     public static final int ANIMATION_NAV_FADE_OUT_DURATION = 133;
     public static final long ANIMATION_DELAY_NAV_FADE_IN =
             APP_LAUNCH_DURATION - ANIMATION_NAV_FADE_IN_DURATION;
     public static final Interpolator NAV_FADE_IN_INTERPOLATOR =
-            new PathInterpolator(0f, 0f, 0f, 1f);
+            new PathInterpolator(0.2f, 0.4f, 0f, 1f);
     public static final Interpolator NAV_FADE_OUT_INTERPOLATOR =
-            new PathInterpolator(0.2f, 0f, 1f, 1f);
+            new PathInterpolator(0.1f, 0.2f, 0.3f, 1f);
 
-    public static final int RECENTS_LAUNCH_DURATION = 336;
-    private static final int LAUNCHER_RESUME_START_DELAY = 100;
-    private static final int CLOSING_TRANSITION_DURATION_MS = 250;
-    public static final int SPLIT_LAUNCH_DURATION = 370;
+    public static final int RECENTS_LAUNCH_DURATION = 316;
+    private static final int LAUNCHER_RESUME_START_DELAY = 90;
+    private static final int CLOSING_TRANSITION_DURATION_MS = 185;
+    public static final int SPLIT_LAUNCH_DURATION = 320;
     public static final int SPLIT_DIVIDER_ANIM_DURATION = 100;
 
-    public static final int CONTENT_ALPHA_DURATION = 217;
+    public static final int CONTENT_ALPHA_DURATION = 157;
     public static final int TRANSIENT_TASKBAR_TRANSITION_DURATION = 417;
     public static final int TASKBAR_TO_APP_DURATION = 600;
     // TODO(b/236145847): Tune TASKBAR_TO_HOME_DURATION to 383 after conflict with unlock animation
@@ -438,7 +440,12 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
         Animator windowAnimator = getOpeningWindowAnimators(
                 v, appTargets, wallpaperTargets, nonAppTargets, launcherClosing);
         windowAnimator.setStartDelay(startDelay);
-        anim.play(windowAnimator);
+
+        // Apply the depth effect here
+        Animator depthAnimator = createDepthAnimator(v);
+        depthAnimator.setStartDelay(startDelay);
+
+        anim.play(windowAnimator).with(depthAnimator);
         if (launcherClosing) {
             // Delay animation by a frame to avoid jank.
             Pair<AnimatorSet, Runnable> launcherContentAnimator =
@@ -451,6 +458,19 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
                 }
             });
         }
+    }
+
+    private Animator createDepthAnimator(View v) {
+    ObjectAnimator scaleXAnimator = ObjectAnimator.ofFloat(v, "scaleX", 1.0f, 1.1f, 1.0f);
+    ObjectAnimator scaleYAnimator = ObjectAnimator.ofFloat(v, "scaleY", 1.0f, 1.1f, 1.0f);
+    ObjectAnimator translationZAnimator = ObjectAnimator.ofFloat(v, "translationZ", 0f, 30f, 0f); // Example depth movement
+
+    AnimatorSet depthAnimatorSet = new AnimatorSet();
+    depthAnimatorSet.playTogether(scaleXAnimator, scaleYAnimator, translationZAnimator);
+    depthAnimatorSet.setInterpolator(new DecelerateInterpolator(1.5f)); // Adjust as necessary
+    depthAnimatorSet.setDuration(200); // Set the duration depending on the required effect
+
+    return depthAnimatorSet;
     }
 
     private void composeWidgetLaunchAnimator(
@@ -700,8 +720,8 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
 
         AnimatorSet animatorSet = new AnimatorSet();
         ValueAnimator appAnimator = ValueAnimator.ofFloat(0, 1);
-        appAnimator.setDuration(APP_LAUNCH_DURATION);
-        appAnimator.setInterpolator(LINEAR);
+        appAnimator.setDuration(APP_LAUNCH_DURATION + APP_LAUNCH_DURATION/2);
+        appAnimator.setInterpolator(new DecelerateInterpolator(0.65f));
         appAnimator.addListener(floatingView);
         appAnimator.addListener(new AnimatorListenerAdapter() {
             @Override
@@ -815,7 +835,7 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
 
                 if (initOnly) {
                     // For the init pass, we want full alpha since the window is not yet ready.
-                    floatingView.update(1f, floatingIconBounds, percent, 0f,
+                    floatingView.update(0.5f, floatingIconBounds, percent, 0f,
                             mWindowRadius.value * scale, true /* isOpening */);
                     return;
                 }

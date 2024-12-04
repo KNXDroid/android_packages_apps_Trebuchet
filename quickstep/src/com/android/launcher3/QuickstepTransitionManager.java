@@ -433,11 +433,7 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
                 v, appTargets, wallpaperTargets, nonAppTargets, launcherClosing);
         windowAnimator.setStartDelay(startDelay);
 
-        // Apply the depth effect here
-        Animator depthAnimator = createDepthAnimator(v);
-        depthAnimator.setStartDelay(startDelay);
-
-        anim.play(windowAnimator).with(depthAnimator);
+        anim.play(windowAnimator);
         if (launcherClosing) {
             // Delay animation by a frame to avoid jank.
             Pair<AnimatorSet, Runnable> launcherContentAnimator =
@@ -450,19 +446,6 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
                 }
             });
         }
-    }
-
-    private Animator createDepthAnimator(View v) {
-    ObjectAnimator scaleXAnimator = ObjectAnimator.ofFloat(v, "scaleX", 1.0f, 1.1f, 1.0f);
-    ObjectAnimator scaleYAnimator = ObjectAnimator.ofFloat(v, "scaleY", 1.0f, 1.1f, 1.0f);
-    ObjectAnimator translationZAnimator = ObjectAnimator.ofFloat(v, "translationZ", 0f, 30f, 0f); // Example depth movement
-
-    AnimatorSet depthAnimatorSet = new AnimatorSet();
-    depthAnimatorSet.playTogether(scaleXAnimator, scaleYAnimator, translationZAnimator);
-    depthAnimatorSet.setInterpolator(new DecelerateInterpolator(1.5f)); // Adjust as necessary
-    depthAnimatorSet.setDuration(200); // Set the duration depending on the required effect
-
-    return depthAnimatorSet;
     }
 
     private void composeWidgetLaunchAnimator(
@@ -674,6 +657,7 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
             mLauncher.resumeExpensiveViewUpdates();
         };
     }
+    
 
     /**
      * @return Animator that controls the window of the opening targets from app icons.

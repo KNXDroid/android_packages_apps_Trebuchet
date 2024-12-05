@@ -62,7 +62,7 @@ public class HintState extends LauncherState {
     @Override
     public int getWorkspaceScrimColor(Launcher launcher) {
         return ColorUtils.setAlphaComponent(
-                Themes.getAttrColor(launcher, R.attr.overviewScrimColor), 100);
+                Themes.getAttrColor(launcher, R.attr.overviewScrimColor), 75);
     }
 
     @Override

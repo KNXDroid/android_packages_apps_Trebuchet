@@ -209,7 +209,7 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
 
     public static final int RECENTS_LAUNCH_DURATION = 316;
     private static final int LAUNCHER_RESUME_START_DELAY = 90;
-    private static final int CLOSING_TRANSITION_DURATION_MS = 185;
+    private static final int CLOSING_TRANSITION_DURATION_MS = 150;
     public static final int SPLIT_LAUNCH_DURATION = 320;
     public static final int SPLIT_DIVIDER_ANIM_DURATION = 100;
 
@@ -595,9 +595,26 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
 
                 ObjectAnimator scaleAnim = ObjectAnimator.ofFloat(view, SCALE_PROPERTY, scales)
                         .setDuration(CONTENT_SCALE_DURATION);
-                scaleAnim.setInterpolator(DECELERATE_1_5);
+                scaleAnim.setInterpolator(new DecelerateInterpolator(1.35f));
                 launcherAnimator.play(scaleAnim);
             });
+
+                int scrimColor = Themes.getAttrColor(mLauncher, R.attr.overviewScrimColor);
+                int scrimColorTrans = ColorUtils.setAlphaComponent(scrimColor, 40);
+                int[] colors = isAppOpening
+                        ? new int[]{scrimColorTrans, scrimColor}
+                        : new int[]{scrimColor, scrimColorTrans};
+                ScrimView scrimView = mLauncher.getScrimView();
+                if (scrimView.getBackground() instanceof ColorDrawable) {
+                    scrimView.setBackgroundColor(colors[0]);
+
+                    ObjectAnimator scrim = ObjectAnimator.ofArgb(scrimView, VIEW_BACKGROUND_COLOR,
+                            colors);
+                    scrim.setDuration(CONTENT_SCRIM_DURATION);
+                    scrim.setInterpolator(DECELERATE_1_5);
+
+                    launcherAnimator.play(scrim);
+                }
 
             endListener = () -> {
                 viewsToAnimate.forEach(view -> {

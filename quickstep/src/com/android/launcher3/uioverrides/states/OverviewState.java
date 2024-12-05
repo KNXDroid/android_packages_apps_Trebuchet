@@ -20,6 +20,7 @@ import static com.android.launcher3.Flags.enableScalingRevealHomeAnimation;
 import static com.android.launcher3.logging.StatsLogManager.LAUNCHER_STATE_OVERVIEW;
 import static com.android.wm.shell.Flags.enableSplitContextual;
 
+import androidx.core.graphics.ColorUtils;
 import android.content.Context;
 import android.graphics.Rect;
 import android.os.SystemProperties;
@@ -28,6 +29,7 @@ import com.android.launcher3.DeviceProfile;
 import com.android.launcher3.Launcher;
 import com.android.launcher3.LauncherState;
 import com.android.launcher3.R;
+import com.android.launcher3.Utilities;
 import com.android.launcher3.util.DisplayController;
 import com.android.launcher3.util.Themes;
 import com.android.quickstep.util.BaseDepthController;
@@ -157,7 +159,7 @@ public class OverviewState extends LauncherState {
 
     @Override
     public int getWorkspaceScrimColor(Launcher launcher) {
-        return Themes.getAttrColor(launcher, R.attr.overviewScrimColor);
+        return ColorUtils.setAlphaComponent(Themes.getAttrColor(launcher, R.attr.overviewScrimColor),45);
     }
 
     @Override

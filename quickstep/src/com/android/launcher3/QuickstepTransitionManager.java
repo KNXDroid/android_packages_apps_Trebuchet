@@ -170,6 +170,7 @@ import com.android.systemui.shared.system.InteractionJankMonitorWrapper;
 import com.android.systemui.shared.system.QuickStepContract;
 import com.android.wm.shell.startingsurface.IStartingWindowListener;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.AccelerateInterpolator;
 
 
 import java.io.PrintWriter;
@@ -198,7 +199,7 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
     public static final long APP_LAUNCH_DURATION = 440;
 
     private static final long APP_LAUNCH_ALPHA_DURATION = 70;
-    private static final long APP_LAUNCH_ALPHA_START_DELAY = 15;
+    private static final long APP_LAUNCH_ALPHA_START_DELAY = 0;
 
     public static final int ANIMATION_NAV_FADE_IN_DURATION = 266;
     public static final int ANIMATION_NAV_FADE_OUT_DURATION = 133;
@@ -593,7 +594,7 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
 
             final boolean scrimEnabled = ENABLE_SCRIM_FOR_APP_LAUNCH.get();
                 int scrimColor = Themes.getAttrColor(mLauncher, R.attr.overviewScrimColor);
-                int scrimColorTrans = ColorUtils.setAlphaComponent(scrimColor, 40);
+                int scrimColorTrans = ColorUtils.setAlphaComponent(scrimColor, 55);
                 int[] colors = isAppOpening
                         ? new int[]{scrimColorTrans, scrimColor}
                         : new int[]{scrimColor, scrimColorTrans};
@@ -614,9 +615,7 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
                     SCALE_PROPERTY.set(view, 1f);
                     view.setLayerType(View.LAYER_TYPE_NONE, null);
                 });
-                if (scrimEnabled) {
-                    mLauncher.getScrimView().setBackgroundColor(Color.TRANSPARENT);
-                }
+                mLauncher.getScrimView().setBackgroundColor(Color.TRANSPARENT);
                 mLauncher.resumeExpensiveViewUpdates();
             };
         }
@@ -777,10 +776,10 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
             FloatProp mCropRectHeight = new FloatProp(prop.cropHeightStart, prop.cropHeightEnd,
                     mOpeningInterpolator);
 
-            FloatProp mNavFadeOut = new FloatProp(1f, 0f, clampToDuration(
+            FloatProp mNavFadeOut = new FloatProp(0.45f, 0f, clampToDuration(
                     NAV_FADE_OUT_INTERPOLATOR, 0, ANIMATION_NAV_FADE_OUT_DURATION,
                     APP_LAUNCH_DURATION));
-            FloatProp mNavFadeIn = new FloatProp(0f, 1f, clampToDuration(
+            FloatProp mNavFadeIn = new FloatProp(0f, 0.45f, clampToDuration(
                     NAV_FADE_IN_INTERPOLATOR, ANIMATION_DELAY_NAV_FADE_IN,
                     ANIMATION_NAV_FADE_IN_DURATION, APP_LAUNCH_DURATION));
 
@@ -975,7 +974,7 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
 
             final FloatProp mWidgetFallbackBackgroundAlpha = new FloatProp(0, 1,
                     clampToDuration(LINEAR, 0, 75, APP_LAUNCH_DURATION));
-            final FloatProp mPreviewAlpha = new FloatProp(0, 1, clampToDuration(
+            final FloatProp mPreviewAlpha = new FloatProp(0, 2, clampToDuration(
                     LINEAR,
                     WIDGET_CROSSFADE_DURATION_MILLIS / 2 /* delay */,
                     WIDGET_CROSSFADE_DURATION_MILLIS / 2 /* duration */,
@@ -994,10 +993,10 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
             final FloatProp mHeight = new FloatProp(widgetBackgroundBounds.height(),
                     windowTargetBounds.height(), mOpeningInterpolator);
 
-            final FloatProp mNavFadeOut = new FloatProp(1f, 0f, clampToDuration(
+            final FloatProp mNavFadeOut = new FloatProp(0.45f, 0f, clampToDuration(
                     NAV_FADE_OUT_INTERPOLATOR, 0, ANIMATION_NAV_FADE_OUT_DURATION,
                     APP_LAUNCH_DURATION));
-            final FloatProp mNavFadeIn = new FloatProp(0f, 1f, clampToDuration(
+            final FloatProp mNavFadeIn = new FloatProp(0f, 0.45f, clampToDuration(
                     NAV_FADE_IN_INTERPOLATOR, ANIMATION_DELAY_NAV_FADE_IN,
                     ANIMATION_NAV_FADE_IN_DURATION, APP_LAUNCH_DURATION));
 
@@ -1046,7 +1045,7 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
             }
         });
 
-        animatorSet.play(appAnimator);
+        animatorSet.playTogether(appAnimator, getBackgroundAnimator());
 
         return animatorSet;
     }
@@ -1055,47 +1054,11 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
      * Returns animator that controls depth/blur of the background.
      */
     private ObjectAnimator getBackgroundAnimator() {
-        // When launching an app from overview that doesn't map to a task, we still want to just
-        // blur the wallpaper instead of the launcher surface as well
-        boolean allowBlurringLauncher = mLauncher.getStateManager().getState() != OVERVIEW
-                && BlurUtils.supportsBlursOnWindows();
-
         LaunchDepthController depthController = new LaunchDepthController(mLauncher);
         ObjectAnimator backgroundRadiusAnim = ObjectAnimator.ofFloat(depthController.stateDepth,
-                        MULTI_PROPERTY_VALUE, BACKGROUND_APP.getDepth(mLauncher))
-                        .setDuration(APP_LAUNCH_DURATION);
-
-        if (allowBlurringLauncher) {
-            // Create a temporary effect layer, that lives on top of launcher, so we can apply
-            // the blur to it. The EffectLayer will be fullscreen, which will help with caching
-            // optimizations on the SurfaceFlinger side:
-            // - Results would be able to be cached as a texture
-            // - There won't be texture allocation overhead, because EffectLayers don't have
-            //   buffers
-            ViewRootImpl viewRootImpl = mLauncher.getDragLayer().getViewRootImpl();
-            SurfaceControl parent = viewRootImpl != null
-                    ? viewRootImpl.getSurfaceControl()
-                    : null;
-            SurfaceControl dimLayer = new SurfaceControl.Builder()
-                    .setName("Blur layer")
-                    .setParent(parent)
-                    .setOpaque(false)
-                    .setHidden(false)
-                    .setEffectLayer()
-                    .build();
-
-            backgroundRadiusAnim.addListener(AnimatorListeners.forEndCallback(() ->
-                    new SurfaceControl.Transaction().remove(dimLayer).apply()));
-        }
-
-        backgroundRadiusAnim.addListener(
-                AnimatorListeners.forEndCallback(() -> {
-                    // reset the depth to match the main depth controller's depth
-                    depthController.stateDepth
-                            .setValue(mLauncher.getDepthController().stateDepth.getValue());
-                    depthController.dispose();
-                }));
-
+                        MULTI_PROPERTY_VALUE, BACKGROUND_APP.getDepth(mLauncher) * 8f)
+                        .setDuration(APP_LAUNCH_DURATION + APP_LAUNCH_DURATION/2);
+                        backgroundRadiusAnim.setInterpolator(new DecelerateInterpolator(0.3f));
         return backgroundRadiusAnim;
     }
 
@@ -1643,10 +1606,10 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
                 skipAllAppsScale = true;
             } else if (!fromPredictiveBack) {
                 if (enableScalingRevealHomeAnimation()) {
-                    anim.play(
+                    anim.playTogether(
                             new ScalingWorkspaceRevealAnim(
                                     mLauncher, rectFSpringAnim,
-                                    rectFSpringAnim.getTargetRect()).getAnimators());
+                                    rectFSpringAnim.getTargetRect()).getAnimators(),getBackgroundAnimator());
                 } else {
                     anim.play(new StaggeredWorkspaceAnim(mLauncher, velocity.y,
                             true /* animateOverviewScrim */, launcherView).getAnimators());

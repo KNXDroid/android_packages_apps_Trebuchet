@@ -198,10 +198,15 @@ android_app {
         ":launcher-build-config",
     ],
 
+    javacflags: [
+        "-Xlint:all",
+        "-Xlint:-serial",
+    ],
+
     optimize: {
         proguard_flags_files: ["proguard.flags"],
         // Proguard is disable for testing. Derivarive prjects to keep proguard enabled
-        enabled: false,
+        enabled: true,
     },
 
     sdk_version: "current",

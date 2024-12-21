@@ -86,7 +86,7 @@ import java.lang.ref.WeakReference;
  */
 public class LauncherBackAnimationController {
     private static final int SCRIM_FADE_DURATION = 233;
-    private static final float MIN_WINDOW_SCALE = 0.85f;
+    private static final float MIN_WINDOW_SCALE = 0.55f;
     private static final float MAX_SCRIM_ALPHA_DARK = 0.8f;
     private static final float MAX_SCRIM_ALPHA_LIGHT = 0.2f;
 

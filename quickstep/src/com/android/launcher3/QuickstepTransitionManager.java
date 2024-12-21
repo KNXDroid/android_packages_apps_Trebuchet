@@ -1055,11 +1055,11 @@ public class QuickstepTransitionManager implements OnDeviceProfileChangeListener
      */
     private ObjectAnimator getBackgroundAnimator() {
         LaunchDepthController depthController = new LaunchDepthController(mLauncher);
-        ObjectAnimator backgroundRadiusAnim = ObjectAnimator.ofFloat(depthController.stateDepth,
-                        MULTI_PROPERTY_VALUE, BACKGROUND_APP.getDepth(mLauncher) * 8f)
+        ObjectAnimator BackgroundRadiusAnim = ObjectAnimator.ofFloat(depthController.stateDepth,
+                        MULTI_PROPERTY_VALUE, 0f, 8.5f)
                         .setDuration(APP_LAUNCH_DURATION + APP_LAUNCH_DURATION/2);
-                        backgroundRadiusAnim.setInterpolator(new DecelerateInterpolator(0.3f));
-        return backgroundRadiusAnim;
+                        BackgroundRadiusAnim.setInterpolator(new DecelerateInterpolator(0.23f));
+        return BackgroundRadiusAnim;
     }
 
     /**

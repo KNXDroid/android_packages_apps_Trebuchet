@@ -74,7 +74,7 @@ public final class FeatureFlags {
             "CONTINUOUS_VIEW_TREE_CAPTURE", ENABLED, "Capture View tree every frame");
 
     public static final BooleanFlag ENABLE_WORKSPACE_LOADING_OPTIMIZATION = getDebugFlag(251502424,
-            "ENABLE_WORKSPACE_LOADING_OPTIMIZATION", DISABLED,
+            "ENABLE_WORKSPACE_LOADING_OPTIMIZATION", ENABLED,
             "load the current workspace screen visible to the user before the rest rather than "
                     + "loading all of them at once.");
 
@@ -130,7 +130,7 @@ public final class FeatureFlags {
 
     // TODO(Block 12): Clean up flags
     public static final BooleanFlag ENABLE_MULTI_INSTANCE = getDebugFlag(270396680,
-            "ENABLE_MULTI_INSTANCE", DISABLED,
+            "ENABLE_MULTI_INSTANCE", ENABLED,
             "Enables creation and filtering of multiple task instances in overview");
 
     // TODO(Block 13): Clean up flags
@@ -175,7 +175,7 @@ public final class FeatureFlags {
             "PROMISE_APPS_IN_ALL_APPS", DISABLED, "Add promise icon in all-apps");
 
     public static final BooleanFlag KEYGUARD_ANIMATION = getDebugFlag(270390904,
-            "KEYGUARD_ANIMATION", DISABLED,
+            "KEYGUARD_ANIMATION", ENABLED,
             "Enable animation for keyguard going away on wallpaper");
 
     public static final BooleanFlag ENABLE_DEVICE_SEARCH = getReleaseFlag(270390907,
@@ -247,7 +247,7 @@ public final class FeatureFlags {
 
     // Aconfig migration complete for ENABLE_HOME_TRANSITION_LISTENER.
     public static final BooleanFlag ENABLE_HOME_TRANSITION_LISTENER = getDebugFlag(306053414,
-            "ENABLE_HOME_TRANSITION_LISTENER", DISABLED,
+            "ENABLE_HOME_TRANSITION_LISTENER", ENABLED,
             "Enables launcher to listen to all transitions that include home activity.");
 
     public static boolean enableHomeTransitionListener() {
@@ -260,7 +260,7 @@ public final class FeatureFlags {
 
     // TODO(Block 22): Clean up flags
     public static final BooleanFlag ENABLE_WIDGET_TRANSITION_FOR_RESIZING = getDebugFlag(268553314,
-            "ENABLE_WIDGET_TRANSITION_FOR_RESIZING", DISABLED,
+            "ENABLE_WIDGET_TRANSITION_FOR_RESIZING", ENABLED,
             "Enable widget transition animation when resizing the widgets");
 
     public static final BooleanFlag PREEMPTIVE_UNFOLD_ANIMATION_START = getDebugFlag(270397209,
@@ -281,7 +281,7 @@ public final class FeatureFlags {
 
     // TODO(Block 27): Clean up flags
     public static final BooleanFlag ENABLE_OVERLAY_CONNECTION_OPTIM = getDebugFlag(270392629,
-            "ENABLE_OVERLAY_CONNECTION_OPTIM", DISABLED,
+            "ENABLE_OVERLAY_CONNECTION_OPTIM", ENABLED,
             "Enable optimizing overlay service connection");
 
     /**
@@ -293,7 +293,7 @@ public final class FeatureFlags {
 
     public static final BooleanFlag ALWAYS_USE_HARDWARE_OPTIMIZATION_FOR_FOLDER_ANIMATIONS =
             getDebugFlag(270393096, "ALWAYS_USE_HARDWARE_OPTIMIZATION_FOR_FOLDER_ANIMATIONS",
-            DISABLED, "Always use hardware optimization for folder animations.");
+            ENABLED, "Always use hardware optimization for folder animations.");
 
     public static final BooleanFlag SEPARATE_RECENTS_ACTIVITY = getDebugFlag(270392980,
             "SEPARATE_RECENTS_ACTIVITY", DISABLED,
@@ -309,7 +309,7 @@ public final class FeatureFlags {
 
     // Aconfig migration complete for ENABLE_SPLIT_FROM_WORKSPACE_TO_WORKSPACE.
     public static final BooleanFlag ENABLE_SPLIT_FROM_WORKSPACE_TO_WORKSPACE = getDebugFlag(
-            270393453, "ENABLE_SPLIT_FROM_WORKSPACE_TO_WORKSPACE", DISABLED,
+            270393453, "ENABLE_SPLIT_FROM_WORKSPACE_TO_WORKSPACE", ENABLED,
             "Enable initiating split screen from workspace to workspace.");
     public static boolean enableSplitContextually() {
         return ENABLE_SPLIT_FROM_WORKSPACE_TO_WORKSPACE.get() ||

@@ -75,7 +75,7 @@ public class QuickstepAtomicAnimationFactory extends
         RecentsAtomicAnimationFactory<QuickstepLauncher, LauncherState> {
 
     // Scale recents takes before animating in
-    private static final float RECENTS_PREPARE_SCALE = 1.33f;
+    private static final float RECENTS_PREPARE_SCALE = 2.6f;
     // Scale workspace takes before animating in
     private static final float WORKSPACE_PREPARE_SCALE = 0.92f;
     // Constants to specify how to scroll RecentsView to the default page if it's not already there.

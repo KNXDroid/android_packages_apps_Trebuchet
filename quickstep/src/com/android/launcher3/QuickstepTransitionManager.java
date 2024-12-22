@@ -168,6 +168,12 @@ import com.android.systemui.shared.system.QuickStepContract;
 import com.android.wm.shell.startingsurface.IStartingWindowListener;
 import android.view.animation.DecelerateInterpolator;
 import android.view.animation.AccelerateInterpolator;
+import static com.android.launcher3.LauncherAnimUtils.VIEW_BACKGROUND_COLOR;
+import com.android.launcher3.util.Themes;
+import com.android.launcher3.views.ScrimView;
+import android.graphics.drawable.ColorDrawable;
+import android.animation.ObjectAnimator;
+import static android.animation.ObjectAnimator.ofArgb;
 
 
 import java.io.PrintWriter;

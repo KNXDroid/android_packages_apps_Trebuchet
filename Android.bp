@@ -380,7 +380,6 @@ android_app {
         optimize: true,
         shrink: true,
         obfuscate: true,
-        proguard_flags_files: ["proguard.flags"],
     },
 
     sdk_version: "current",

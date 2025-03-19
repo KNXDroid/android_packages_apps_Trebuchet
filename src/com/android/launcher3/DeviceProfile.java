@@ -423,7 +423,7 @@ public class DeviceProfile {
         isTwoPanels = isTablet && isMultiDisplay;
         boolean isTaskBarEnabled = LineageSettings.System.getInt(context.getContentResolver(),
                 LineageSettings.System.ENABLE_TASKBAR,
-                (isTablet || (enableTinyTaskbar() && isGestureMode)) ? 1 : 0) == 1;
+                (showTaskBar || (enableTinyTaskbar() && isGestureMode)) ? 1 : 0) == 1;
         isTaskbarPresent = isTaskBarEnabled
                 && WindowManagerProxy.INSTANCE.get(context).isTaskbarDrawnInProcess();
 
@@ -2074,6 +2074,10 @@ public class DeviceProfile {
 
     public static int calculateCellHeight(int height, int borderSpacing, int countY) {
         return (height - ((countY - 1) * borderSpacing)) / countY;
+    }
+    
+    public boolean isTaskBarSettingEnabled(Context context) {
+        return SettingsCache.INSTANCE.get(context).getValue(ENABLE_TASKBAR, isTablet ? 1 : 0);
     }
 
     /**

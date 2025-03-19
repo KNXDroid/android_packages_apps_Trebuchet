@@ -444,7 +444,6 @@ public class TaskbarActivityContext extends BaseTaskbarContext {
      */
     public boolean isPhoneMode() {
         return ENABLE_TASKBAR_NAVBAR_UNIFICATION
-                && mDeviceProfile.isPhone
                 && !mDeviceProfile.isTaskbarPresent;
     }
 

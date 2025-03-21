@@ -423,7 +423,7 @@ public class DeviceProfile {
         isTwoPanels = isTablet && isMultiDisplay;
         boolean isTaskBarEnabled = LineageSettings.System.getInt(context.getContentResolver(),
                 LineageSettings.System.ENABLE_TASKBAR,
-                (showTaskBar || (enableTinyTaskbar() && isGestureMode)) ? 1 : 0) == 1;
+                (enableTinyTaskbar() && isGestureMode) ? 1 : 0) == 1;
         isTaskbarPresent = isTaskBarEnabled
                 && WindowManagerProxy.INSTANCE.get(context).isTaskbarDrawnInProcess();
 

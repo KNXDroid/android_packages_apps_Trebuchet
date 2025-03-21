@@ -2076,10 +2076,6 @@ public class DeviceProfile {
         return (height - ((countY - 1) * borderSpacing)) / countY;
     }
     
-    public boolean isTaskBarSettingEnabled(Context context) {
-        return SettingsCache.INSTANCE.get(context).getValue(ENABLE_TASKBAR, isTablet ? 1 : 0);
-    }
-
     /**
      * When {@code true}, the device is in landscape mode and the hotseat is on the right column.
      * When {@code false}, either device is in portrait mode or the device is in landscape mode and

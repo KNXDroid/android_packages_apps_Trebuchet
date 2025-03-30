@@ -18,6 +18,8 @@ package com.android.quickstep.inputconsumers;
 
 import android.content.Context;
 
+import android.os.Handler;
+
 import androidx.annotation.Nullable;
 
 import com.android.launcher3.R;
@@ -57,6 +59,7 @@ public class NavHandleLongPressHandler implements ResourceBasedOverride {
      */
     public void onTouchStarted(NavHandle navHandle) {
         navHandle.animateNavBarLongPress(true, true, 200L);
+        navHandle.animateNavBarDisappear(true, true, 100L);
     }
 
     /**
@@ -67,6 +70,15 @@ public class NavHandleLongPressHandler implements ResourceBasedOverride {
      * @param reason why the touch ended
      */
     public void onTouchFinished(NavHandle navHandle, String reason) {
+        // Animate the long press immediately
         navHandle.animateNavBarLongPress(false, true, 200L);
+
+        // Use a Handler to delay the disappear animation by 3 seconds
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                navHandle.animateNavBarDisappear(false, true, 450L);
+            }
+        }, 3000); // 3000 milliseconds = 3 seconds
     }
 }

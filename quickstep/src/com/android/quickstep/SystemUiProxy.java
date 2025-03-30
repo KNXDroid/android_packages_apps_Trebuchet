@@ -485,6 +485,17 @@ public class SystemUiProxy implements ISystemUiProxy, NavHandle, SafeCloseable {
     }
 
     @Override
+    public void animateNavBarDisappear(boolean isTouchDown, boolean shrink, long durationMs) {
+        if (mSystemUiProxy != null) {
+            try {
+                mSystemUiProxy.animateNavBarLongPress(isTouchDown, shrink, durationMs);
+            } catch (RemoteException e) {
+                Log.w(TAG, "Failed call animateNavBarLongPress", e);
+            }
+        }
+    }
+
+    @Override
     public void setOverrideHomeButtonLongPress(long duration, float slopMultiplier,
             boolean haptic) {
         if (mSystemUiProxy != null) {

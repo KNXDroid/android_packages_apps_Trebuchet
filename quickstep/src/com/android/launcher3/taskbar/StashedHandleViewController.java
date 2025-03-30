@@ -345,6 +345,17 @@ public class StashedHandleViewController implements TaskbarControllers.LoggableT
     }
 
     @Override
+    public void animateNavBarDisappear(boolean isTouchDown, boolean shrink, long durationMs) {
+        float targetScale;
+        if (!isTouchDown) {
+            targetScale = shrink ? 0.0f : SCALE_TOUCH_ANIMATION_EXPAND;
+        } else {
+            targetScale = 1f;
+        }
+        mStashedHandleView.animateScale(targetScale, durationMs);
+    }
+
+    @Override
     public boolean isNavHandleStashedTaskbar() {
         return true;
     }

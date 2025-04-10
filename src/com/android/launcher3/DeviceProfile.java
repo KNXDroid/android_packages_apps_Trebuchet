@@ -1899,8 +1899,7 @@ public class DeviceProfile {
                 startSpacing = inlineNavButtonsEndSpacingPx;
                 endSpacing = availableWidthPx - hotseatWidth - startSpacing + hotseatBorderSpace;
             } else {
-                startSpacing = isTablet ? (availableWidthPx - hotseatWidth) / 2 :
-                            (availableWidthPx - hotseatQsbWidth) / 2;
+                startSpacing = (availableWidthPx - hotseatWidth) / 2;
                 endSpacing = startSpacing;
             }
             startSpacing += getAdditionalQsbSpace();
@@ -1976,7 +1975,7 @@ public class DeviceProfile {
     }
 
     private int getAdditionalQsbSpace() {
-        return isTablet && isQsbInline ? hotseatQsbWidth + hotseatBorderSpace : 0;
+        return isQsbInline ? hotseatQsbWidth + hotseatBorderSpace : 0;
     }
 
     /**

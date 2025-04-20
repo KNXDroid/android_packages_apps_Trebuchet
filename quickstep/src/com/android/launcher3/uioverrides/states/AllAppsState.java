@@ -207,6 +207,6 @@ public class AllAppsState extends LauncherState {
     public int getWorkspaceScrimColor(Launcher launcher) {
         return ColorUtils.setAlphaComponent(launcher.getDeviceProfile().isTablet
                 ? launcher.getResources().getColor(R.color.widgets_picker_scrim)
-                : Themes.getAttrColor(launcher, R.attr.allAppsScrimColor),60);
+                : Themes.getAttrColor(launcher, R.attr.allAppsScrimColor),255);
     }
 }

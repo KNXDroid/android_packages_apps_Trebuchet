@@ -331,9 +331,6 @@ public class Launcher extends StatefulActivity<LauncherState>
     private final KeyboardShortcutsDelegate mKeyboardShortcutsDelegate =
             new KeyboardShortcutsDelegate(this);
 
-    private static final long GC_INTERVAL_MS = 10 * 60 * 1000L; // 10 minutes
-    private long lastGcTime = 0L;
-
     @Thunk
     Workspace<?> mWorkspace;
     @Thunk
@@ -1289,20 +1286,6 @@ public class Launcher extends StatefulActivity<LauncherState>
         return Optional.of(LAUNCHER_ALLAPPS_EXIT);
     }
 
-    private final Runnable mLauncherGcOpt = new Runnable() {
-        @Override
-        public void run() {
-            long currentTime = System.currentTimeMillis();
-            if (lastGcTime == 0L || currentTime - lastGcTime > GC_INTERVAL_MS) {
-                Log.v("GcOpt", "performing garbage collection for Launcher");
-                System.gc();
-                System.runFinalization();
-                System.gc();
-                lastGcTime = currentTime;
-            }
-        }
-    };
-
     @Override
     protected void onResume() {
         TraceHelper.INSTANCE.beginSection(ON_RESUME_EVT);
@@ -1313,8 +1296,6 @@ public class Launcher extends StatefulActivity<LauncherState>
         } else {
             mOverlayManager.onActivityResumed();
         }
-        
-        mHandler.removeCallbacks(mLauncherGcOpt);
 
         DragView.removeAllViews(this);
         TraceHelper.INSTANCE.endSection();
@@ -1334,8 +1315,6 @@ public class Launcher extends StatefulActivity<LauncherState>
             mOverlayManager.onActivityPaused();
         }
         mAppWidgetHolder.setActivityResumed(false);
-        
-        mHandler.postDelayed(mLauncherGcOpt, 1000);
     }
 
     /**
